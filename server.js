@@ -11,7 +11,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
     methods: ["GET", "POST"]
   }
 });
@@ -133,13 +133,20 @@ app.use((error, req, res, next) => {
   res.status(500).json({ error: error.message });
 });
 
-// Serve static files in production
+// Serve static files in production (only if client build exists)
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/build')));
+  const clientBuildPath = path.join(__dirname, '../client/build');
   
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-  });
+  // Check if client build directory exists before serving static files
+  if (fs.existsSync(clientBuildPath)) {
+    app.use(express.static(clientBuildPath));
+    
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(clientBuildPath, 'index.html'));
+    });
+  } else {
+    console.log('Client build directory not found. Running as API-only server.');
+  }
 }
 
 server.listen(PORT, () => {
