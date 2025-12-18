@@ -18,7 +18,6 @@ class PostureAnalyzer {
     if (angle > 180.0) {
       angle = 360 - angle;
     }
-    
     return angle;
   }
 
@@ -54,6 +53,7 @@ class PostureAnalyzer {
 
       // Check back angle (should be >150 degrees)
       const backAngle = this.calculateAngle(
+        
         { x: (leftShoulder.x + rightShoulder.x) / 2, y: (leftShoulder.y + rightShoulder.y) / 2 },
         { x: (leftHip.x + rightHip.x) / 2, y: (leftHip.y + rightHip.y) / 2 },
         { x: (leftKnee.x + rightKnee.x) / 2, y: (leftKnee.y + rightKnee.y) / 2 }
