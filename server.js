@@ -44,7 +44,7 @@ const upload = multer({
     fileSize: 100 * 1024 * 1024 // 100MB limit
   },
   fileFilter: (req, file, cb) => {
-    
+
     const allowedTypes = /mp4|avi|mov|wmv|flv|webm/;
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
     const mimetype = allowedTypes.test(file.mimetype);
@@ -63,6 +63,7 @@ const postureAnalyzer = new PostureAnalyzer();
 app.get('/api/health', (req, res) => {
   res.json({ status: 'Server is running', timestamp: new Date().toISOString() });
 });
+
 
 // Upload video for analysis
 app.post('/api/upload-video', upload.single('video'), async (req, res) => {
